@@ -21,11 +21,20 @@ class TodoDao{
     return $stmt -> fetchAll(PDO::FETCH_ASSOC);
   }
   //add todo to database
-  public function add($description) {
-    $stmt = $this -> conn->prepare("INSERT INTO todos(description, created) VALUES ('$description','2022.04.14 22:29:00')");
-    return $result = $stmt -> execute();
-
-
+  public function add($description, $created) {
+    $stmt = $this -> conn->prepare("INSERT INTO todos(description, created) VALUES (:description, :created)");
+    $stmt -> execute(['description'=>$description, 'created'=>$created]);
+  }
+  //delete todo from database
+  public function delete($id){
+    $stmt = $this -> conn->prepare("DELETE FROM todos WHERE id=:id");
+    $stmt -> bindParam(':id', $id); //SQL injection prevention
+    $stmt -> execute();
+  }
+  //update todo in database
+  public function update($id, $description, $created) {
+    $stmt = $this -> conn->prepare("UPDATE todos SET description='$description', created='$created' WHERE id=$id");
+    $stmt -> execute();
   }
 
 
