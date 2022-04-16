@@ -34,7 +34,7 @@ class TodoDao{
   //update todo in database
   public function update($id, $description, $created) {
     $stmt = $this -> conn->prepare("UPDATE todos SET description=:description, created=:created WHERE id=:id");
-    $stmt -> execute(['id'=$id, 'description'=>$description, 'created'=>$created]);
+    $stmt -> execute(['id'=>$id, 'description'=>$description, 'created'=>$created]);
   }
 
 
