@@ -20,10 +20,19 @@ class TodoDao{
     $stmt -> execute();
     return $stmt -> fetchAll(PDO::FETCH_ASSOC);
   }
+  //method used to read all todo objects from database
+  public function get_by_id($id) {
+    $stmt = $this -> conn->prepare("SELECT * FROM todos WHERE id=:id");
+    $stmt -> execute(['id'=>$id]);
+    $result = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    return @reset($result);
+  }
   //add todo to database
-  public function add($description, $created) {
+  public function add($todo) {
     $stmt = $this -> conn->prepare("INSERT INTO todos(description, created) VALUES (:description, :created)");
-    $stmt -> execute(['description'=>$description, 'created'=>$created]);
+    $stmt -> execute($todo);
+    $todo['id'] = $this -> conn -> lastInsertId();
+    return $todo;
   }
   //delete todo from database
   public function delete($id){
@@ -32,9 +41,10 @@ class TodoDao{
     $stmt -> execute();
   }
   //update todo in database
-  public function update($id, $description, $created) {
+  public function update($todo) {
     $stmt = $this -> conn->prepare("UPDATE todos SET description=:description, created=:created WHERE id=:id");
-    $stmt -> execute(['id'=>$id, 'description'=>$description, 'created'=>$created]);
+    $stmt -> execute($todo);
+    return $todo;
   }
 
 
