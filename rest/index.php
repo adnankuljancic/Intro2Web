@@ -12,7 +12,7 @@ Flight::register('todoDao', 'TodoDao');
 ** List all todos
 */
 Flight::route('GET /todos', function(){
-  Flight::json(Flight::todoDao() -> get_all());
+  Flight::json(Flight::todoDao()->get_all());
 });
 /*
 ** List individual todo
