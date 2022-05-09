@@ -5,9 +5,13 @@
   <meta charset="utf-8">
   <title>Todo App</title>
   <link href="css/bootstrap.min.css" rel="stylesheet">
-<style>
-  .error{color:red};
-</style>
+  <style>
+    .error {
+      color: red
+    }
+
+    ;
+  </style>
 
 
 </head>
@@ -102,7 +106,7 @@
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Created</label>
-            <input name="date" type="date" class="form-control required">
+            <input name="created" type="date" class="form-control required">
           </div>
 
         </div>
@@ -116,26 +120,27 @@
   </div>
 </div>
 <script>
-
   getTodos();
   $('#addTodoForm').validate({
     submitHandler: function(form) {
-   console.log($(form));
-   var todo = Object.fromEntries((new FormData(form)).entries());
-   $.ajax({
-     url: 'rest/todos/',
-     type: 'POST',
-     data: JSON.stringify(todo),
-     contentType: "application/json",
-     dataType: "json",
-     success: function(result) {
-       $("#todo-list").html(`<div class="spinner-border" role="status"><span class="sr-only"></span></div>`);
-       $("#addTodoModal").modal("hide");
-       getTodos();
-     }
-   });
- }
-});
+      var todo = Object.fromEntries((new FormData(form)).entries());
+      $.ajax({
+        url: 'rest/todos/',
+        type: 'POST',
+        data: JSON.stringify(todo),
+        contentType: "application/json",
+        dataType: "json",
+        success: function(result) {
+          $("#todo-list").html(`<div class="spinner-border" role="status"><span class="sr-only"></span></div>`);
+          getTodos();
+          console.log(result);
+          $("#addTodoModal").modal("hide");
+
+        }
+      });
+    }
+  });
+
   function getTodos() {
     $.get("rest/todos", function(data) {
 
@@ -145,9 +150,18 @@
         <div class="col-lg-4">
           <h2>` + data[i].created + `</h2>
           <p>` + data[i].description + `</p>
-          <p><button type="button" class="btn btn-primary todo-button" onClick="showModal(` + data[i].id + `)">
-            Launch demo modal
-          </button></p>
+          <p>
+          <button type="button" class="btn btn-primary todo-button" onClick="showModal(` + data[i].id + `)">
+            Edit
+          </button>
+          <button type="button" class="btn btn-primary todo-button" onClick="deleteTodo(` + data[i].id + `)">
+            Delete todo
+          </button>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary">Edit</button>
+            <button type="button" class="btn btn-danger">Delete</button>
+          </div>
+          </p>
         </div> `;
         $("#todo-list").html(html);
       }
@@ -187,7 +201,16 @@
     });
   }
 
-
+  function deleteTodo(id) {
+    $.ajax({
+      url: 'rest/todos/' + id,
+      type: 'DELETE',
+      success: function(result) {
+        $("#todo-list").html(`<div class="spinner-border" role="status"><span class="sr-only"></span></div>`);
+        getTodos();
+      }
+    });
+  }
 </script>
 
 </html>
