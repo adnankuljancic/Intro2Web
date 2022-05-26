@@ -1,12 +1,11 @@
 <?php
 require_once __DIR__.'/BaseService.class.php';
-require_once __DIR__.'/../dao/NoteDao.class.php';
-class NoteService extends BaseService{
-  private $dao;
+require_once __DIR__.'/../dao/TodoDao.class.php';
+class TodoService extends BaseService{
   public function __construct() {
-     parent::__construct(new NoteDao());
+     parent::__construct(new TodoDao());
   }
-  
+
 
 }
 
